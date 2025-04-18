@@ -1,6 +1,7 @@
 using ContactsApp.Entities;
 using ContactsApp.Models;
 using ContactsApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -38,7 +39,12 @@ namespace ContactsApp.Controllers
 
             return Ok(token);
         }
-
-
+        [Authorize]
+        [HttpGet]
+        public IActionResult AuthenticatedOnlyEndpoint()
+        {
+            // Ten endpoint jest chroniony i wymaga uwierzytelnienia
+            return Ok("You are authenticated!");
+        }
     }
 }
