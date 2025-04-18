@@ -30,15 +30,28 @@ namespace ContactsApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
-            var token = await authService.LoginAsync(request);
+            var result = await authService.LoginAsync(request);
 
-            if (token is null)
+            if (result is null)
             {
                 return BadRequest("Invalid credentials");
             }
 
-            return Ok(token);
+            return Ok(result);
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestsDto request)
+        {
+            var result = await authService.RefreshTokensAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null)
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+
+            return Ok(result);
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult AuthenticatedOnlyEndpoint()
