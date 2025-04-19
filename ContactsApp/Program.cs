@@ -1,5 +1,5 @@
 using ContactsApp.Data;
-using ContactsApp.Services;
+using ContactsApp.Services.AuthService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

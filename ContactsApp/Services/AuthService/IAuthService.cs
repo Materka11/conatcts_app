@@ -1,7 +1,7 @@
 ﻿using ContactsApp.Entities;
 using ContactsApp.Models;
 
-namespace ContactsApp.Services
+namespace ContactsApp.Services.AuthService
 {
     public interface IAuthService
     {

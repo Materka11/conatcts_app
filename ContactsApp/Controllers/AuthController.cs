@@ -1,6 +1,6 @@
 using ContactsApp.Entities;
 using ContactsApp.Models;
-using ContactsApp.Services;
+using ContactsApp.Services.AuthService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

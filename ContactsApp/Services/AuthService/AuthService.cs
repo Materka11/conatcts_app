@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace ContactsApp.Services
+namespace ContactsApp.Services.AuthService
 {
     public class AuthService(AppDbContext context, IConfiguration configuration) : IAuthService
     {
