@@ -12,9 +12,6 @@ namespace ContactsApp.Controllers
     [ApiController]
     public class AuthController(IAuthService authService) : ControllerBase
     {
-        //testowy user
-        public static User user = new();
-
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
