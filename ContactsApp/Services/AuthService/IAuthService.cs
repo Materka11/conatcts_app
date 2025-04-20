@@ -7,6 +7,6 @@ namespace ContactsApp.Services.AuthService
     {
         Task<User?> RegisterAsync(UserDto request);
         Task<TokenResponseDto?> LoginAsync(UserDto request);
-        Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestsDto requests)
+        Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestsDto requests);
     }
 }
