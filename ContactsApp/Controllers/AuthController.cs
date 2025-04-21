@@ -10,12 +10,18 @@ namespace ContactsApp.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController : ControllerBase
     {
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
-            var user = await authService.RegisterAsync(request);
+            var user = await _authService.RegisterAsync(request);
 
             if (user is null)
             {
@@ -27,7 +33,7 @@ namespace ContactsApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
-            var result = await authService.LoginAsync(request);
+            var result = await _authService.LoginAsync(request);
 
             if (result is null)
             {
@@ -40,7 +46,7 @@ namespace ContactsApp.Controllers
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestsDto request)
         {
-            var result = await authService.RefreshTokensAsync(request);
+            var result = await _authService.RefreshTokensAsync(request);
             if (result is null || result.AccessToken is null || result.RefreshToken is null)
             {
                 return Unauthorized("Invalid refresh token");
@@ -53,7 +59,7 @@ namespace ContactsApp.Controllers
         [HttpGet]
         public IActionResult AuthenticatedOnlyEndpoint()
         {
-            // Ten endpoint jest chroniony i wymaga uwierzytelnienia
+            //przyklad
             return Ok("You are authenticated!");
         }
     }

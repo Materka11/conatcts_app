@@ -1,5 +1,8 @@
 using ContactsApp.Data;
 using ContactsApp.Services.AuthService;
+using ContactsApp.Services.CateogryService;
+using ContactsApp.Services.ContactService;
+using ContactsApp.Services.SubcategoryService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +38,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 
 var app = builder.Build();
 

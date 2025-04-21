@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContactsApp.Services.SubcategoryService
 {
-    public class SubcategoryService : ISubcateogryService
+    public class SubcategoryService : ISubcategoryService
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;

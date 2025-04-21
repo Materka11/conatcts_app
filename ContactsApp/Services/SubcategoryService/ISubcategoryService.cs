@@ -2,7 +2,7 @@
 
 namespace ContactsApp.Services.SubcategoryService
 {
-    public interface ISubcateogryService
+    public interface ISubcategoryService
     {
         Task<List<Subcategory>> GetAllSubcategoriesAsync();
     }
