@@ -1,6 +1,6 @@
 using ContactsApp.Data;
 using ContactsApp.Services.AuthService;
-using ContactsApp.Services.CateogryService;
+using ContactsApp.Services.CategoryService;
 using ContactsApp.Services.ContactService;
 using ContactsApp.Services.SubcategoryService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,12 +35,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173") // frontend
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
+
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
@@ -54,6 +66,8 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", "Contacts API V1");
     });
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

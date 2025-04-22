@@ -9,13 +9,14 @@ namespace ContactsApp.Controllers
     public class SubcategoriesController : ControllerBase
     {
         private readonly ISubcategoryService _subcategoryService;
+        private readonly ILogger<SubcategoriesController> _logger;
 
-        public SubcategoriesController(ISubcategoryService subcategoryService)
+        public SubcategoriesController(ISubcategoryService subcategoryService, ILogger<SubcategoriesController> logger)
         {
             _subcategoryService = subcategoryService ?? throw new ArgumentNullException(nameof(subcategoryService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // Pobiera wszystkie podkategorie
         [HttpGet]
         public async Task<ActionResult<List<SubcategoryDto>>> GetAllSubcategories()
         {
@@ -26,7 +27,13 @@ namespace ContactsApp.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(ex, "Invalid operation while fetching subcategories.");
                 return StatusCode(500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while fetching subcategories.");
+                return StatusCode(500, "An unexpected error occurred while fetching subcategories.");
             }
         }
     }

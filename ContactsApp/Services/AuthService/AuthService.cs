@@ -97,7 +97,8 @@ namespace ContactsApp.Services.AuthService
             return new TokenResponseDto
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                UserId = user.Id
             };
         }
 

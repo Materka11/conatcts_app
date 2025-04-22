@@ -2,7 +2,7 @@
 using ContactsApp.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContactsApp.Services.CateogryService
+namespace ContactsApp.Services.CategoryService
 {
     public class CategoryService : ICategoryService
     {

@@ -6,15 +6,18 @@ namespace ContactsApp.Entities
     public class Contact
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required, MaxLength(50)]
+        [Required(ErrorMessage = "First name is required.")]
+        [StringLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
         public string FirstName { get; set; } = string.Empty;
 
-        [Required, MaxLength(50)]
+        [Required(ErrorMessage = "Last name is required.")]
+        [StringLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
         public string LastName { get; set; } = string.Empty;
 
-        [Required, MaxLength(100)]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; } = string.Empty;
 
         [ForeignKey("Category")]
@@ -25,7 +28,7 @@ namespace ContactsApp.Entities
         public Guid? SubcategoryId { get; set; }
         public Subcategory? Subcategory { get; set; }
 
-        [MaxLength(20)]
+        [StringLength(20, ErrorMessage = "Phone cannot exceed 50 characters.")]
         public string? Phone { get; set; }
 
         public DateTime? DateOfBirth { get; set; }

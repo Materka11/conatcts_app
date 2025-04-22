@@ -1,5 +1,5 @@
 ﻿using ContactsApp.Models;
-using ContactsApp.Services.CateogryService;
+using ContactsApp.Services.CategoryService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Controllers
@@ -9,10 +9,12 @@ namespace ContactsApp.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<CategoriesController> _logger;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, ILogger<CategoriesController> logger)
         {
             _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpGet]
@@ -25,9 +27,14 @@ namespace ContactsApp.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(ex, "Invalid operation while fetching categories.");
                 return StatusCode(500, ex.Message);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while fetching categories.");
+                return StatusCode(500, "An unexpected error occurred while fetching categories.");
+            }
         }
-
     }
 }

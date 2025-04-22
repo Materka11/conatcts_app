@@ -1,6 +1,6 @@
 ﻿using ContactsApp.Entities;
 
-namespace ContactsApp.Services.CateogryService
+namespace ContactsApp.Services.CategoryService
 {
     public interface ICategoryService
     {

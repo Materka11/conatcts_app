@@ -1,33 +1,19 @@
 import { useState } from "react";
-import axios from "axios";
+import { LoginService, RegisterService } from "../services/authService";
 
 interface IProps {
-  setToken: (token: string) => void;
-  setUserId: (userId: string) => void;
-  setRefreshToken: (refreshToken: string) => void;
   setCurrentView: (view: string) => void;
 }
 
-export const Login = ({
-  setToken,
-  setUserId,
-  setRefreshToken,
-  setCurrentView,
-}: IProps) => {
+export const Login = ({ setCurrentView }: IProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("/api/auth/login", { email, password });
-      if (response.data) {
-        localStorage.setItem("token", response.data.accessToken);
-        localStorage.setItem("refreshToken", response.data.refreshToken);
-        localStorage.setItem("userId", response.data.userId);
-        setToken(response.data.accessToken);
-        setRefreshToken(response.data.refreshToken);
-        setUserId(response.data.userId);
+      const response = await LoginService(email, password);
+      if (response) {
         setCurrentView("contacts");
       }
     } catch (err) {
@@ -38,16 +24,13 @@ export const Login = ({
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("/api/auth/register", {
-        email,
-        password,
-      });
-      if (response.data) {
-        setError("Rejestracja zakończona sukcesem. Zaloguj się.");
+      const response = await RegisterService(email, password);
+      if (response) {
+        setError("Registeration successful. You can now log in.");
       }
     } catch (err) {
       console.error(err);
-      setError("Rejestracja nie powiodła się. Spróbuj ponownie.");
+      setError("Registration failed. Please try again.");
     }
   };
 

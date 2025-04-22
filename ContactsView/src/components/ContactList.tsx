@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  createContact,
+  deleteContact,
+  getContacts,
+} from "../services/contactService";
+import { getCategories } from "../services/categoryService";
+import { getSubcategories } from "../services/subcategoryService";
 
-interface IProps {
-  token: string;
-  userId: string;
-  refreshToken: string;
-  setToken: (token: string) => void;
-}
-
-export const ContactList = ({
-  token,
-  userId,
-  refreshToken,
-  setToken,
-}: IProps) => {
-  const [contacts, setContacts] = useState<IContact[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [subcategories, setSubcategories] = useState<ISubcategory[]>([]);
+export const ContactList = () => {
+  const [contacts, setContacts] = useState<IContact[] | undefined>([]);
+  const [categories, setCategories] = useState<ICategory[] | undefined>([]);
+  const [subcategories, setSubcategories] = useState<
+    ISubcategory[] | undefined
+  >([]);
   const [showForm, setShowForm] = useState(false);
   const [newContact, setNewContact] = useState<IContactBody>({
     firstName: "",
@@ -37,43 +33,17 @@ export const ContactList = ({
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get("/api/contacts", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setContacts(response.data);
+      const response = await getContacts();
+      setContacts(response);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 401) {
-          //proba odswiezenia tokena
-          try {
-            const response = await axios.post("/api/auth/refresh", {
-              userId: userId,
-              refreshToken: refreshToken,
-            });
-            localStorage.setItem("token", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            setToken(response.data.accessToken);
-            fetchContacts();
-          } catch (refreshErr) {
-            console.error("Failed to refresh token", refreshErr);
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-            localStorage.removeItem("refreshToken");
-            window.location.reload();
-          }
-        }
-      } else {
-        console.error("Failed to fetch contacts", err);
-      }
+      console.error("Failed to fetch contacts", err);
     }
   };
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("/api/categories", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCategories(response.data);
+      const response = await getCategories();
+      setCategories(response);
     } catch (err) {
       console.error("Failed to fetch categories", err);
     }
@@ -81,10 +51,8 @@ export const ContactList = ({
 
   const fetchSubcategories = async () => {
     try {
-      const response = await axios.get("/api/subcategories", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSubcategories(response.data);
+      const response = await getSubcategories();
+      setSubcategories(response);
     } catch (err) {
       console.error("Failed to fetch subcategories", err);
     }
@@ -92,9 +60,7 @@ export const ContactList = ({
 
   const handleCreateContact = async () => {
     try {
-      await axios.post("/api/contacts", newContact, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await createContact(newContact);
       setShowForm(false);
       setNewContact({
         firstName: "",
@@ -115,9 +81,7 @@ export const ContactList = ({
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`/api/contacts/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteContact(id);
       fetchContacts();
     } catch (err) {
       console.error("Failed to delete contact", err);
@@ -194,14 +158,14 @@ export const ContactList = ({
             className="w-full p-2 mb-2 border rounded"
           >
             <option value="">Select Category</option>
-            {categories.map((cat) => (
+            {categories?.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
           </select>
           {newContact.categoryId &&
-            categories.find((c) => c.id === newContact.categoryId)?.name ===
+            categories?.find((c) => c.id === newContact.categoryId)?.name ===
               "Służbowy" && (
               <select
                 value={newContact.subcategoryId}
@@ -215,7 +179,7 @@ export const ContactList = ({
               >
                 <option value="">Select Subcategory</option>
                 {subcategories
-                  .filter((sub) => sub.categoryId === newContact.categoryId)
+                  ?.filter((sub) => sub.categoryId === newContact.categoryId)
                   .map((sub) => (
                     <option key={sub.id} value={sub.id}>
                       {sub.name}
@@ -224,7 +188,7 @@ export const ContactList = ({
               </select>
             )}
           {newContact.categoryId &&
-            categories.find((c) => c.id === newContact.categoryId)?.name ===
+            categories?.find((c) => c.id === newContact.categoryId)?.name ===
               "Inny" && (
               <input
                 type="text"
@@ -249,33 +213,37 @@ export const ContactList = ({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {contacts.map((contact) => (
-          <div key={contact.id} className="p-4 bg-white rounded-lg shadow">
-            <h3 className="text-lg font-bold">
-              {contact.firstName} {contact.lastName}
-            </h3>
-            <p>Email: {contact.email}</p>
-            <p>Category: {contact.category?.name}</p>
-            <p>Subcategory: {contact.subcategory?.name}</p>
-            <div className="mt-2">
-              <button
-                onClick={() => {
-                  localStorage.setItem("selectedContactId", contact.id);
-                  window.location.href = "#contactDetails";
-                }}
-                className="mr-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Details
-              </button>
-              <button
-                onClick={() => handleDelete(contact.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
+        {contacts ? (
+          contacts.map((contact) => (
+            <div key={contact.id} className="p-4 bg-white rounded-lg shadow">
+              <h3 className="text-lg font-bold">
+                {contact.firstName} {contact.lastName}
+              </h3>
+              <p>Email: {contact.email}</p>
+              <p>Category: {contact.category?.name}</p>
+              <p>Subcategory: {contact.subcategory?.name}</p>
+              <div className="mt-2">
+                <button
+                  onClick={() => {
+                    localStorage.setItem("selectedContactId", contact.id);
+                    window.location.href = "#contactDetails";
+                  }}
+                  className="mr-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                >
+                  Details
+                </button>
+                <button
+                  onClick={() => handleDelete(contact.id)}
+                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <h2>Empty</h2>
+        )}
       </div>
     </div>
   );
