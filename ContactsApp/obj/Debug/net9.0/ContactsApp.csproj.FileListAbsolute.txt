@@ -166,3 +166,4 @@ F:\Strony\Zadania\NetPC\ContactsApp\obj\Debug\net9.0\refint\ContactsApp.dll
 F:\Strony\Zadania\NetPC\ContactsApp\obj\Debug\net9.0\ContactsApp.pdb
 F:\Strony\Zadania\NetPC\ContactsApp\obj\Debug\net9.0\ContactsApp.genruntimeconfig.cache
 F:\Strony\Zadania\NetPC\ContactsApp\obj\Debug\net9.0\ref\ContactsApp.dll
+F:\Strony\Zadania\NetPC\ContactsApp\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
