@@ -1,45 +1,56 @@
-import { useState } from "react";
 import { Login } from "./components/Login";
 import { ContactList } from "./components/ContactList";
 import { ContactDetails } from "./components/ContactDetails";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [currentView, setCurrentView] = useState("login");
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localStorage.getItem("token")]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("refreshToken");
-    setCurrentView("login");
+    navigate("/login");
   };
-
-  const token = localStorage.getItem("token");
 
   return (
     <main className="min-h-screen bg-gray-100">
-      {token ? (
+      <nav className="bg-blue-600 p-4 text-white flex justify-between">
+        <h1 className="text-xl font-bold">Contacts App</h1>
         <div>
-          <nav className="bg-blue-600 p-4 text-white flex justify-between">
-            <h1 className="text-xl font-bold">Contacts App</h1>
-            <div>
-              <button
-                onClick={() => setCurrentView("contacts")}
-                className="mr-4"
-              >
-                Contacts
-              </button>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          </nav>
-          {currentView === "contacts" && (
-            <ContactList setCurrentView={setCurrentView} />
-          )}
-          {currentView === "contactDetails" && (
-            <ContactDetails setCurrentView={setCurrentView} />
+          <a href="/contacts" className="mr-4 cursor-pointer">
+            Contacts
+          </a>
+          {token ? (
+            <button onClick={handleLogout} className="cursor-pointer">
+              Logout
+            </button>
+          ) : (
+            <a href="/login" className="cursor-pointer">
+              Login
+            </a>
           )}
         </div>
+      </nav>
+      {token ? (
+        <Routes>
+          <Route path="/contacts" element={<ContactList token={token} />} />
+          <Route path="/contacts/:id" element={<ContactDetails />} />
+          <Route path="/" element={<Navigate to="/contacts" />} />
+        </Routes>
       ) : (
-        <Login setCurrentView={setCurrentView} />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/contacts" element={<ContactList token={token} />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
       )}
     </main>
   );

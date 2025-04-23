@@ -128,7 +128,7 @@ namespace ContactsApp.Services.ContactService
 
             Guid? subcategoryId = null;
 
-            if (category.Name == "Służbowy")
+            if (category.Name == "sluzbowy")
             {
                 //sprawdza, czy podkategoria jest podana (wymagana dla "Służbowy")
                 if (!contactDto.SubcategoryId.HasValue)
@@ -150,7 +150,7 @@ namespace ContactsApp.Services.ContactService
                 //przypisuje ID podkategorii
                 subcategoryId = contactDto.SubcategoryId;
             }
-            else if (category.Name == "Inny")
+            else if (category.Name == "inny")
             {
                 //sprawdza, czy podano podkategorię (CustomSubcategory lub SubcategoryId)
                 if (string.IsNullOrWhiteSpace(contactDto.CustomSubcategory) && !contactDto.SubcategoryId.HasValue)

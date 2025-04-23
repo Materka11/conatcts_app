@@ -20,4 +20,6 @@ interface IContactBody {
   categoryId: string;
   subcategoryId?: string;
   customSubcategory?: string;
+  category?: ICategory;
+  subcategory?: ISubcategory;
 }

@@ -31,12 +31,18 @@ namespace ContactsApp.Controllers
                     LastName = c.LastName,
                     Email = c.Email,
                     CategoryId = c.CategoryId,
-                    Category = new CategoryDto
+                    Category = c.Category != null ? new CategoryDto
                     {
                         Id = c.Category.Id,
                         Name = c.Category.Name
-                    },
+                    } : null,
                     SubcategoryId = c.SubcategoryId,
+                    Subcategory = c.Subcategory != null ? new SubcategoryDto
+                    {
+                        Id = c.Subcategory.Id,
+                        Name = c.Subcategory.Name,
+                        CategoryId = c.Subcategory.CategoryId
+                    } : null,
                     Phone = c.Phone,
                     DateOfBirth = c.DateOfBirth
                 }).ToList();
@@ -66,12 +72,18 @@ namespace ContactsApp.Controllers
                     LastName = contact.LastName,
                     Email = contact.Email,
                     CategoryId = contact.CategoryId,
-                    Category = new CategoryDto
+                    Category = contact.Category != null ? new CategoryDto
                     {
                         Id = contact.Category.Id,
                         Name = contact.Category.Name
-                    },
+                    } : null,
                     SubcategoryId = contact.SubcategoryId,
+                    Subcategory = contact.Subcategory != null ? new SubcategoryDto
+                    {
+                        Id = contact.Subcategory.Id,
+                        Name = contact.Subcategory.Name,
+                        CategoryId = contact.Subcategory.CategoryId
+                    } : null,
                     Phone = contact.Phone,
                     DateOfBirth = contact.DateOfBirth
                 };
@@ -103,12 +115,18 @@ namespace ContactsApp.Controllers
                     LastName = createdContact.LastName,
                     Email = createdContact.Email,
                     CategoryId = createdContact.CategoryId,
-                    Category = new CategoryDto
+                    Category = createdContact.Category != null ? new CategoryDto
                     {
                         Id = createdContact.Category.Id,
                         Name = createdContact.Category.Name
-                    },
+                    } : null,
                     SubcategoryId = createdContact.SubcategoryId,
+                    Subcategory = createdContact.Subcategory != null ? new SubcategoryDto
+                    {
+                        Id = createdContact.Subcategory.Id,
+                        Name = createdContact.Subcategory.Name,
+                        CategoryId = createdContact.Subcategory.CategoryId
+                    } : null,
                     Phone = createdContact.Phone,
                     DateOfBirth = createdContact.DateOfBirth
                 };
@@ -149,12 +167,18 @@ namespace ContactsApp.Controllers
                     LastName = updatedContact.LastName,
                     Email = updatedContact.Email,
                     CategoryId = updatedContact.CategoryId,
-                    Category = new CategoryDto
+                    Category = updatedContact.Category != null ? new CategoryDto
                     {
                         Id = updatedContact.Category.Id,
                         Name = updatedContact.Category.Name
-                    },
+                    } : null,
                     SubcategoryId = updatedContact.SubcategoryId,
+                    Subcategory = updatedContact.Subcategory != null ? new SubcategoryDto
+                    {
+                        Id = updatedContact.Subcategory.Id,
+                        Name = updatedContact.Subcategory.Name,
+                        CategoryId = updatedContact.Subcategory.CategoryId
+                    } : null,
                     Phone = updatedContact.Phone,
                     DateOfBirth = updatedContact.DateOfBirth
                 };

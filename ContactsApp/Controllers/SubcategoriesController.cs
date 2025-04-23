@@ -23,7 +23,13 @@ namespace ContactsApp.Controllers
             try
             {
                 var subcategories = await _subcategoryService.GetAllSubcategoriesAsync();
-                return Ok(subcategories);
+                var subcategoriesDtos = subcategories.Select(s => new SubcategoryDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    CategoryId = s.CategoryId
+                }).ToList();
+                return Ok(subcategoriesDtos);
             }
             catch (InvalidOperationException ex)
             {

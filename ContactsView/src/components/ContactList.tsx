@@ -8,10 +8,10 @@ import { getCategories } from "../services/categoryService";
 import { getSubcategories } from "../services/subcategoryService";
 
 interface IProps {
-  setCurrentView: (view: string) => void;
+  token: string | null;
 }
 
-export const ContactList = ({ setCurrentView }: IProps) => {
+export const ContactList = ({ token }: IProps) => {
   const [contacts, setContacts] = useState<IContact[] | undefined>([]);
   const [categories, setCategories] = useState<ICategory[] | undefined>([]);
   const [subcategories, setSubcategories] = useState<
@@ -93,12 +93,14 @@ export const ContactList = ({ setCurrentView }: IProps) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <button
-        onClick={() => setShowForm(!showForm)}
-        className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        {showForm ? "Cancel" : "Add Contact"}
-      </button>
+      {token && (
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        >
+          {showForm ? "Cancel" : "Add Contact"}
+        </button>
+      )}
 
       {showForm && (
         <div className="mb-6 p-4 bg-white rounded-lg shadow">
@@ -167,7 +169,7 @@ export const ContactList = ({ setCurrentView }: IProps) => {
           </select>
           {newContact.categoryId &&
             categories?.find((c) => c.id === newContact.categoryId)?.name ===
-              "Służbowy" && (
+              "sluzbowy" && (
               <select
                 value={newContact.subcategoryId}
                 onChange={(e) =>
@@ -190,11 +192,11 @@ export const ContactList = ({ setCurrentView }: IProps) => {
             )}
           {newContact.categoryId &&
             categories?.find((c) => c.id === newContact.categoryId)?.name ===
-              "Inny" && (
+              "inny" && (
               <input
                 type="text"
                 placeholder="Custom Subcategory"
-                value={newContact.customSubcategory}
+                value={newContact.subcategory?.name || ""}
                 onChange={(e) =>
                   setNewContact({
                     ...newContact,
@@ -222,25 +224,23 @@ export const ContactList = ({ setCurrentView }: IProps) => {
               </h3>
               <p>Email: {contact.email}</p>
               <p>Category: {contact.category?.name}</p>
-              <p>Subcategory: {contact.subcategory?.name}</p>
-              <div className="mt-2">
-                <button
-                  onClick={() => {
-                    localStorage.setItem("selectedContactId", contact.id);
-                    window.location.href = "#contactDetails";
-                    setCurrentView("contactDetails");
-                  }}
-                  className="mr-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Details
-                </button>
-                <button
-                  onClick={() => handleDelete(contact.id)}
-                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
-              </div>
+              <p>Subcategory: {contact.subcategory?.name || "Empty"}</p>
+              {token && (
+                <div className="mt-2">
+                  <a
+                    href={`/contacts/${contact.id}`}
+                    className="mr-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                  >
+                    Details
+                  </a>
+                  <button
+                    onClick={() => handleDelete(contact.id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           ))
         ) : (

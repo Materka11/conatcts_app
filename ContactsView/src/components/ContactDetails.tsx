@@ -2,12 +2,10 @@ import { useState, useEffect } from "react";
 import { getContact, updateContact } from "../services/contactService";
 import { getCategories } from "../services/categoryService";
 import { getSubcategories } from "../services/subcategoryService";
+import { useParams } from "react-router-dom";
 
-interface IProps {
-  setCurrentView: (view: string) => void;
-}
-
-export const ContactDetails = ({ setCurrentView }: IProps) => {
+export const ContactDetails = () => {
+  const { id } = useParams();
   const [contact, setContact] = useState<IContact | undefined | null>(null);
   const [categories, setCategories] = useState<ICategory[] | undefined>([]);
   const [subcategories, setSubcategories] = useState<
@@ -19,13 +17,12 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
   >(null);
 
   useEffect(() => {
-    const contactId = localStorage.getItem("selectedContactId");
-    if (contactId) {
-      fetchContact(contactId);
+    if (id) {
+      fetchContact(id);
       fetchCategories();
       fetchSubcategories();
     }
-  }, []);
+  }, [id]);
 
   const fetchContact = async (id: string) => {
     try {
@@ -74,15 +71,12 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <button
-        onClick={() => {
-          localStorage.removeItem("selectedContactId");
-          setCurrentView("contacts");
-        }}
+      <a
+        href="/contacts"
         className="mb-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
       >
         Back to List
-      </button>
+      </a>
 
       <div className="p-6 bg-white rounded-lg shadow">
         {isEditing && editedContact ? (
@@ -139,7 +133,6 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
                 setEditedContact({
                   ...editedContact,
                   categoryId: e.target.value,
-                  subcategoryId: "",
                   customSubcategory: "",
                 })
               }
@@ -154,7 +147,7 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
             </select>
             {editedContact.categoryId &&
               categories?.find((c) => c.id === editedContact.categoryId)
-                ?.name === "Służbowy" && (
+                ?.name === "sluzbowy" && (
                 <select
                   value={editedContact.subcategoryId}
                   onChange={(e) =>
@@ -179,11 +172,11 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
               )}
             {editedContact.categoryId &&
               categories?.find((c) => c.id === editedContact.categoryId)
-                ?.name === "Inny" && (
+                ?.name === "inny" && (
                 <input
                   type="text"
                   placeholder="Custom Subcategory"
-                  value={editedContact.customSubcategory}
+                  value={editedContact.subcategory?.name || ""}
                   onChange={(e) =>
                     setEditedContact({
                       ...editedContact,
@@ -217,7 +210,7 @@ export const ContactDetails = ({ setCurrentView }: IProps) => {
             <p>Phone: {contact.phone}</p>
             <p>Date of Birth: {contact.dateOfBirth}</p>
             <p>Category: {contact.category?.name}</p>
-            <p>Subcategory: {contact.subcategory?.name}</p>
+            <p>Subcategory: {contact.subcategory?.name || "Empty"}</p>
             <button
               onClick={() => setIsEditing(true)}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"

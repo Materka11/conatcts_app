@@ -7,8 +7,9 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
-        public CategoryDto Category { get; set; } = null!;
+        public CategoryDto? Category { get; set; }
         public Guid? SubcategoryId { get; set; }
+        public SubcategoryDto? Subcategory { get; set; }
         public string? CustomSubcategory { get; set; }
         public string? Phone { get; set; }
         public DateTime? DateOfBirth { get; set; }
