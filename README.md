@@ -30,31 +30,58 @@ Aplikacja `ContactsApp` to serwis API napisany w technologii ASP.NET Core. Umoż
 
 ### ⚙️ Sposób kompilacji i uruchomienia
 
-1. Upewnij się, że masz zainstalowany .NET SDK (min. .NET 7 lub 8).
-2. Ustaw zmienną środowiskową `JWT_TOKEN` lub zostaw token w `appsettings.json`.
-3. Wejdź w podfolder ContactsApp poleceniem:
+1. Upewnij się, że masz zainstalowany **.NET SDK** (minimum .NET 7 lub 8).
+2. Zainstaluj globalnie narzędzie Entity Framework CLI (jeśli jeszcze go nie masz):
 
-```bash
-cd ./ContactsApp
-```
+    ```bash
+    dotnet tool install --global dotnet-ef
+    ```
 
-3. Uruchom aplikację poleceniem:
+3. Ustaw zmienną środowiskową `JWT_TOKEN`, lub dodaj token do pliku (zostawiłem go w pliku) `appsettings.json`.
 
-```bash
-dotnet watch
-```
+4. Wejdź do katalogu z backendem:
 
-4. Nastepnie odtworz nastepny terminal w podfolderze ContactsView
-5. Zainstaluj potrzebne zależności poleceniem:
+    ```bash
+    cd ./ContactsApp
+    ```
 
-```bash
-npm i
-```
+5. Zaktualizuj bazę danych:
 
-6. Uruchom strone internetową poleceniem:
+    ```bash
+    dotnet ef database update
+    ```
 
-```bash
-npm run dev
-```
+6. Uruchom backend:
 
-Domyślnie aplikacja nasłuchuje na porcie http://localhost:5025 a strona internetowa na http://localhost:5173.
+    ```bash
+    dotnet watch
+    ```
+
+---
+
+7. Otwórz **nowy terminal** i przejdź do folderu z frontendem:
+
+    ```bash
+    cd ./ContactsView
+    ```
+
+8. Zainstaluj zależności:
+
+    ```bash
+    npm install
+    ```
+
+9. Uruchom stronę internetową:
+
+    ```bash
+    npm run dev
+    ```
+
+---
+
+### 🌐 Domyślne adresy aplikacji:
+
+- **Backend**: http://localhost:5025  
+- **Frontend**: http://localhost:5173
+
+---
