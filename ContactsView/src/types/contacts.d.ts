@@ -18,6 +18,6 @@ interface IContactBody {
   phone: string;
   dateOfBirth: string;
   categoryId: string;
-  subcategoryId: string;
+  subcategoryId?: string;
   customSubcategory?: string;
 }

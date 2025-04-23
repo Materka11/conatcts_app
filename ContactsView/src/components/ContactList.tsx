@@ -7,7 +7,11 @@ import {
 import { getCategories } from "../services/categoryService";
 import { getSubcategories } from "../services/subcategoryService";
 
-export const ContactList = () => {
+interface IProps {
+  setCurrentView: (view: string) => void;
+}
+
+export const ContactList = ({ setCurrentView }: IProps) => {
   const [contacts, setContacts] = useState<IContact[] | undefined>([]);
   const [categories, setCategories] = useState<ICategory[] | undefined>([]);
   const [subcategories, setSubcategories] = useState<
@@ -21,7 +25,6 @@ export const ContactList = () => {
     phone: "",
     dateOfBirth: "",
     categoryId: "",
-    subcategoryId: "",
     customSubcategory: "",
   });
 
@@ -69,7 +72,6 @@ export const ContactList = () => {
         phone: "",
         dateOfBirth: "",
         categoryId: "",
-        subcategoryId: "",
         customSubcategory: "",
       });
       fetchContacts();
@@ -151,7 +153,6 @@ export const ContactList = () => {
               setNewContact({
                 ...newContact,
                 categoryId: e.target.value,
-                subcategoryId: "",
                 customSubcategory: "",
               })
             }
@@ -214,7 +215,7 @@ export const ContactList = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {contacts ? (
-          contacts.map((contact) => (
+          contacts?.map((contact) => (
             <div key={contact.id} className="p-4 bg-white rounded-lg shadow">
               <h3 className="text-lg font-bold">
                 {contact.firstName} {contact.lastName}
@@ -227,6 +228,7 @@ export const ContactList = () => {
                   onClick={() => {
                     localStorage.setItem("selectedContactId", contact.id);
                     window.location.href = "#contactDetails";
+                    setCurrentView("contactDetails");
                   }}
                   className="mr-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                 >

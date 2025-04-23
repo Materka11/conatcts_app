@@ -1,5 +1,4 @@
-﻿using ContactsApp.Entities;
-using ContactsApp.Models;
+﻿using ContactsApp.Models;
 using ContactsApp.Services.ContactService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +19,28 @@ namespace ContactsApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Contact>>> GetAllContacts()
+        public async Task<ActionResult<List<ContactDto>>> GetAllContacts()
         {
             try
             {
                 var contacts = await _contactService.GetAllContactsAsync();
-                return Ok(contacts);
+                var contactDtos = contacts.Select(c => new ContactDto
+                {
+                    Id = c.Id,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    Email = c.Email,
+                    CategoryId = c.CategoryId,
+                    Category = new CategoryDto
+                    {
+                        Id = c.Category.Id,
+                        Name = c.Category.Name
+                    },
+                    SubcategoryId = c.SubcategoryId,
+                    Phone = c.Phone,
+                    DateOfBirth = c.DateOfBirth
+                }).ToList();
+                return Ok(contactDtos);
             }
             catch (Exception ex)
             {
@@ -35,7 +50,7 @@ namespace ContactsApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Contact>> GetContact(Guid id)
+        public async Task<ActionResult<ContactDto>> GetContact(Guid id)
         {
             try
             {
@@ -44,7 +59,23 @@ namespace ContactsApp.Controllers
                 {
                     return NotFound("Contact not found.");
                 }
-                return Ok(contact);
+                var contactDto = new ContactDto
+                {
+                    Id = contact.Id,
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    Email = contact.Email,
+                    CategoryId = contact.CategoryId,
+                    Category = new CategoryDto
+                    {
+                        Id = contact.Category.Id,
+                        Name = contact.Category.Name
+                    },
+                    SubcategoryId = contact.SubcategoryId,
+                    Phone = contact.Phone,
+                    DateOfBirth = contact.DateOfBirth
+                };
+                return Ok(contactDto);
             }
             catch (Exception ex)
             {
@@ -55,7 +86,7 @@ namespace ContactsApp.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Contact>> CreateContact([FromBody] ContactDto contactDto)
+        public async Task<ActionResult<ContactDto>> CreateContact([FromBody] ContactDto contactDto)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +96,23 @@ namespace ContactsApp.Controllers
             try
             {
                 var createdContact = await _contactService.CreateContactAsync(contactDto);
-                return CreatedAtAction(nameof(GetContact), new { id = createdContact.Id }, createdContact);
+                var responseDto = new ContactDto
+                {
+                    Id = createdContact.Id,
+                    FirstName = createdContact.FirstName,
+                    LastName = createdContact.LastName,
+                    Email = createdContact.Email,
+                    CategoryId = createdContact.CategoryId,
+                    Category = new CategoryDto
+                    {
+                        Id = createdContact.Category.Id,
+                        Name = createdContact.Category.Name
+                    },
+                    SubcategoryId = createdContact.SubcategoryId,
+                    Phone = createdContact.Phone,
+                    DateOfBirth = createdContact.DateOfBirth
+                };
+                return CreatedAtAction(nameof(GetContact), new { id = createdContact.Id }, responseDto);
             }
             catch (ArgumentException ex)
             {
@@ -81,7 +128,7 @@ namespace ContactsApp.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<ActionResult<Contact>> UpdateContact(Guid id, [FromBody] ContactDto contactDto)
+        public async Task<ActionResult<ContactDto>> UpdateContact(Guid id, [FromBody] ContactDto contactDto)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +142,23 @@ namespace ContactsApp.Controllers
                 {
                     return NotFound("Contact not found.");
                 }
-                return Ok(updatedContact);
+                var responseDto = new ContactDto
+                {
+                    Id = updatedContact.Id,
+                    FirstName = updatedContact.FirstName,
+                    LastName = updatedContact.LastName,
+                    Email = updatedContact.Email,
+                    CategoryId = updatedContact.CategoryId,
+                    Category = new CategoryDto
+                    {
+                        Id = updatedContact.Category.Id,
+                        Name = updatedContact.Category.Name
+                    },
+                    SubcategoryId = updatedContact.SubcategoryId,
+                    Phone = updatedContact.Phone,
+                    DateOfBirth = updatedContact.DateOfBirth
+                };
+                return Ok(responseDto);
             }
             catch (ArgumentException ex)
             {

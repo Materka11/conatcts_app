@@ -30,7 +30,6 @@ namespace ContactsApp.Entities
 
         [StringLength(20, ErrorMessage = "Phone cannot exceed 50 characters.")]
         public string? Phone { get; set; }
-
         public DateTime? DateOfBirth { get; set; }
     }
 }

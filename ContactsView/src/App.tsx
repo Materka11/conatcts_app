@@ -31,7 +31,9 @@ function App() {
               <button onClick={handleLogout}>Logout</button>
             </div>
           </nav>
-          {currentView === "contacts" && <ContactList />}
+          {currentView === "contacts" && (
+            <ContactList setCurrentView={setCurrentView} />
+          )}
           {currentView === "contactDetails" && (
             <ContactDetails setCurrentView={setCurrentView} />
           )}

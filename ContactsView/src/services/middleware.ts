@@ -9,6 +9,9 @@ interface FailedRequest {
 
 export const client = axios.create({
   baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 client.interceptors.request.use(
